@@ -71,14 +71,13 @@ public class Main extends Application {
         terrain.setOnKeyPressed(e -> {
             switch (e.getCode()) {
                 case LEFT:
-                    game.left();
+                    ShipGame.left = true;
                     break;
                 case RIGHT:
-                    game.right();
+                    ShipGame.right = true;
                     break;
                 case SPACE:
-                    game.showfire();
-                    game.accel();
+                    ShipGame.accel = true;
                     break;
 
             }
@@ -86,8 +85,15 @@ public class Main extends Application {
 
         terrain.setOnKeyReleased(e -> {
             System.out.println(e.getCode().toString());
-            if(e.getCode() == KeyCode.SPACE){
-                game.removeFire();
+            switch (e.getCode()) {
+                case LEFT:
+                    ShipGame.left = false;
+                    break;
+                case RIGHT:
+                    ShipGame.right = false;
+                    break;
+                case SPACE:
+                    ShipGame.accel = false;
             }
         });
         terrain.requestFocus();

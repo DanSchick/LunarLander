@@ -12,6 +12,9 @@ public class ShipGame {
     ImageView ship;
     ImageView fire;
     boolean show = true;
+    public static boolean accel = false;
+    public static boolean left = false;
+    public static boolean right = false;
     Point2D vector = new Point2D(0, .4);
     private double dy = 0;
     private double dx = 0;
@@ -43,27 +46,35 @@ public class ShipGame {
 
     }
     void accel(){
-        System.out.println(vector.angle(0, 1));
         dy -= vector.getY();
         dx -= vector.getX();
     }
 
     void left(){
         //vector = vector.subtract(-., 0);
-        double xp = ((vector.getX() * Math.cos(Math.toRadians(-5)) - (vector.getY() * Math.sin(Math.toRadians(-5)))));
-        double yp = ((vector.getY() * Math.cos(Math.toRadians(-5)) + (vector.getX() * Math.sin(Math.toRadians(-5)))));
+        double xp = ((vector.getX() * Math.cos(Math.toRadians(-10)) - (vector.getY() * Math.sin(Math.toRadians(-10)))));
+        double yp = ((vector.getY() * Math.cos(Math.toRadians(-10)) + (vector.getX() * Math.sin(Math.toRadians(-10)))));
         vector = new Point2D(xp, yp);
-        ship.rotateProperty().set(ship.getRotate() - 5);
+        ship.rotateProperty().set(ship.getRotate() - 10);
     }
 
     void right(){
-        double xp = ((vector.getX() * Math.cos(Math.toRadians(5)) - (vector.getY() * Math.sin(Math.toRadians(5)))));
-        double yp = ((vector.getY() * Math.cos(Math.toRadians(5)) + (vector.getX() * Math.sin(Math.toRadians(5)))));
+        double xp = ((vector.getX() * Math.cos(Math.toRadians(10)) - (vector.getY() * Math.sin(Math.toRadians(10)))));
+        double yp = ((vector.getY() * Math.cos(Math.toRadians(10)) + (vector.getX() * Math.sin(Math.toRadians(10)))));
         vector = new Point2D(xp, yp);
-        ship.rotateProperty().set(ship.getRotate() + 5);
+        ship.rotateProperty().set(ship.getRotate() + 10);
     }
 
     void update(){
+        if(left){ left(); }
+        if(right){right();}
+        if(accel){
+            accel();
+            showfire();
+        }
+        if(!accel){
+            removeFire();
+        }
         dy += .1;
         ship.yProperty().setValue(ship.getY() + dy);
         ship.xProperty().setValue(ship.getX() + dx);
