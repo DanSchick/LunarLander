@@ -15,12 +15,14 @@ public class ShipGame {
     public static boolean accel = false;
     public static boolean left = false;
     public static boolean right = false;
+    public static Asteroid asterioid;
     Point2D vector = new Point2D(0, .4);
     private double dy = 0;
     private double dx = 0;
 
     public ShipGame(Main App, Terrain terrain){
         ship = new ImageView(new Image("images/rocket.png", 50, 75, false, false));
+        asterioid = new Asteroid(App, terrain);
         ship.xProperty().setValue(500);
         Main.pane.getChildren().add(ship);
         fire = new ImageView(new Image("images/rocket_fire.png", 50 , 75, false, false));
@@ -28,7 +30,7 @@ public class ShipGame {
     }
 
     void showfire(){
-        if(show == true) {
+        if(show) {
             System.out.println(ship.getLayoutX());
             fire.xProperty().unbind();
             fire.yProperty().unbind();
@@ -66,6 +68,9 @@ public class ShipGame {
     }
 
     void update(){
+        if(ship.getBoundsInParent().intersects(asterioid.asteroid.getBoundsInParent())){
+            ship.imageProperty().setValue(new Image("images/rocket_crashed.png", 50, 75, false, false));
+        }
         if(left){ left(); }
         if(right){right();}
         if(accel){
@@ -83,7 +88,6 @@ public class ShipGame {
 
     void removeFire(){
         show = true;
-        System.out.print("flag");
         Main.pane.getChildren().remove(fire);
 
     }

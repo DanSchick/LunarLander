@@ -36,6 +36,7 @@ public class Main extends Application {
 
         game = new ShipGame(this, terrain);
 
+
         primaryStage.setTitle("Hello World");
         primaryStage.setScene(scene);
         primaryStage.show();
@@ -57,6 +58,7 @@ public class Main extends Application {
         EventHandler<ActionEvent> eventHandler = (ActionEvent e) -> {
             this.pause();
             game.update();
+            ShipGame.asterioid.update();
             this.resume();
         };
         // Create an animation for alternating text
@@ -84,7 +86,6 @@ public class Main extends Application {
         });
 
         terrain.setOnKeyReleased(e -> {
-            System.out.println(e.getCode().toString());
             switch (e.getCode()) {
                 case LEFT:
                     ShipGame.left = false;
