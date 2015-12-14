@@ -9,14 +9,19 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
+import javafx.scene.layout.BackgroundImage;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.paint.*;
 import javafx.scene.shape.Line;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
+import java.awt.*;
+
 public class Main extends Application {
     private Timeline animation;
     private ShipGame game;
+    private Scene scene;
     private Terrain terrain;
     public static BorderPane pane;
 
@@ -24,13 +29,15 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws Exception{
         Parent root = FXMLLoader.load(getClass().getResource("sample.fxml"));
         pane = new BorderPane();
+        scene = new Scene(pane, 1000, 800);
+        scene.setFill(javafx.scene.paint.Paint.valueOf("151010"));
         terrain = new Terrain();
         pane.setCenter(terrain);
 
         game = new ShipGame(this, terrain);
 
         primaryStage.setTitle("Hello World");
-        primaryStage.setScene(new Scene(pane, 1000, 800));
+        primaryStage.setScene(scene);
         primaryStage.show();
         setUpKeyPresses();
         setUpAnimation();
