@@ -58,7 +58,9 @@ public class Main extends Application {
         EventHandler<ActionEvent> eventHandler = (ActionEvent e) -> {
             this.pause();
             game.update();
-            ShipGame.asterioid.update();
+            for(Asteroid asteroid : ShipGame.asterioids){
+                asteroid.update();
+            }
             this.resume();
         };
         // Create an animation for alternating text
@@ -67,8 +69,6 @@ public class Main extends Application {
         animation.play();
     }
 
-    //TODO: catch multiple keys pressed at once
-    // http://stackoverflow.com/questions/31539250/javafx-catch-more-then-one-key-press-event-at-the-same-time
     private void setUpKeyPresses() {
         terrain.setOnKeyPressed(e -> {
             switch (e.getCode()) {
