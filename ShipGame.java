@@ -14,6 +14,7 @@ public class ShipGame {
     ImageView ship;
     ImageView fire;
     boolean show = true;
+    public static double fuel = 500;
     private double stepCounter = 0;
     public static boolean accel = false;
     public static boolean left = false;
@@ -52,6 +53,8 @@ public class ShipGame {
 
     }
     void accel(){
+        fuel -= .5;
+        Main.fuelCounter.textProperty().setValue(Double.toString(fuel));
         dy -= vector.getY();
         dx -= vector.getX();
     }
@@ -88,7 +91,6 @@ public class ShipGame {
             showfire();
         }
         if(!accel){ removeFire(); }
-        dy += .1;
         ship.yProperty().setValue(ship.getY() + dy);
         ship.xProperty().setValue(ship.getX() + dx);
 

@@ -3,6 +3,8 @@ package sample;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
@@ -12,7 +14,10 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.layout.BackgroundImage;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.*;
+import javafx.scene.paint.Paint;
 import javafx.scene.shape.Line;
+import javafx.scene.text.*;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
@@ -22,6 +27,7 @@ public class Main extends Application {
     private Timeline animation;
     private ShipGame game;
     private Scene scene;
+    public static Text fuelCounter;
     private Terrain terrain;
     public static BorderPane pane;
 
@@ -29,10 +35,15 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws Exception{
         Parent root = FXMLLoader.load(getClass().getResource("sample.fxml"));
         pane = new BorderPane();
+        fuelCounter = new Text(50, 30, "test");
+        fuelCounter.setStroke(Paint.valueOf("5B96A3"));
+        fuelCounter.textProperty().setValue(Double.toString(ShipGame.fuel));
+        fuelCounter.autosize();
         scene = new Scene(pane, 1000, 800);
         scene.setFill(javafx.scene.paint.Paint.valueOf("151010"));
         terrain = new Terrain();
         pane.setCenter(terrain);
+        pane.getChildren().add(fuelCounter);
 
         game = new ShipGame(this, terrain);
 
