@@ -1,5 +1,6 @@
 package sample;
 
+import com.sun.javaws.jnl.JavaFXAppDesc;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
@@ -10,9 +11,9 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
-import javafx.scene.layout.BackgroundImage;
-import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.*;
 import javafx.scene.paint.*;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Line;
@@ -21,7 +22,6 @@ import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
-import java.awt.*;
 
 public class Main extends Application {
     private Timeline animation;
@@ -36,17 +36,23 @@ public class Main extends Application {
         Parent root = FXMLLoader.load(getClass().getResource("sample.fxml"));
         pane = new BorderPane();
         fuelCounter = new Text(50, 30, "test");
+        fuelCounter.fontProperty().setValue(new Font("arial", 36));
+
         fuelCounter.setStroke(Paint.valueOf("5B96A3"));
+        fuelCounter.setFill(Paint.valueOf("5B96A3"));
         fuelCounter.textProperty().setValue(Double.toString(ShipGame.fuel));
         fuelCounter.autosize();
         scene = new Scene(pane, 1000, 800);
-        scene.setFill(javafx.scene.paint.Paint.valueOf("151010"));
         terrain = new Terrain();
+        Image bckImg = new Image("images/spaceBackground.jpg");
+        BackgroundSize size = new BackgroundSize(1280, 800, true, true, true, false);
+        BackgroundImage backImg = new BackgroundImage(bckImg, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.REPEAT, BackgroundPosition.CENTER, size);
+        Background background = new Background(backImg);
+        pane.setBackground(background);
         pane.setCenter(terrain);
         pane.getChildren().add(fuelCounter);
 
         game = new ShipGame(this, terrain);
-
 
         primaryStage.setTitle("Hello World");
         primaryStage.setScene(scene);
@@ -71,6 +77,9 @@ public class Main extends Application {
             game.update();
             for(Asteroid asteroid : ShipGame.asterioids){
                 asteroid.update();
+            }
+            for(Fuel can : ShipGame.canisters){
+                can.update();
             }
             this.resume();
         };
