@@ -1,32 +1,31 @@
 package sample;
 
-import com.sun.javaws.jnl.JavaFXAppDesc;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
-import javafx.scene.input.KeyCode;
 import javafx.scene.layout.*;
-import javafx.scene.paint.*;
 import javafx.scene.paint.Paint;
-import javafx.scene.shape.Line;
 import javafx.scene.text.*;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+
+import java.text.DateFormat;
+import java.util.Calendar;
 
 
 public class Main extends Application {
     private Timeline animation;
     private ShipGame game;
     private Scene scene;
+    public static long startTime;
+    public Text clock;
     public static Text fuelCounter;
     private Terrain terrain;
     public static BorderPane pane;
@@ -34,10 +33,11 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception{
         Parent root = FXMLLoader.load(getClass().getResource("sample.fxml"));
+        startTime = System.nanoTime();
+        System.out.println(startTime);
         pane = new BorderPane();
         fuelCounter = new Text(50, 30, "test");
         fuelCounter.fontProperty().setValue(new Font("arial", 36));
-
         fuelCounter.setStroke(Paint.valueOf("5B96A3"));
         fuelCounter.setFill(Paint.valueOf("5B96A3"));
         fuelCounter.textProperty().setValue(Double.toString(ShipGame.fuel));
@@ -59,12 +59,17 @@ public class Main extends Application {
         primaryStage.show();
         setUpKeyPresses();
         setUpAnimation();
+        setUpTimer();
     }
 
-    public static void addLine(Line line){
-        pane.getChildren().add(line);
-    }
 
+    private void setUpTimer() {
+        clock = new Text(50, 75, "clock");
+        clock.fontProperty().setValue(new Font("arial", 36));
+        clock.setStroke(Paint.valueOf("5B96A3"));
+        clock.setFill(Paint.valueOf("5B96A3"));
+        pane.getChildren().add(clock);
+    }
 
     public static void main(String[] args) {
         Application.launch(args);
@@ -74,6 +79,9 @@ public class Main extends Application {
         // Create a handler
         EventHandler<ActionEvent> eventHandler = (ActionEvent e) -> {
             this.pause();
+            long elapsed = System.nanoTime() - startTime;
+            double elapsedSecs = (double)elapsed / 1000000000.0;
+            clock.textProperty().setValue(Double.toString(elapsedSecs));
             game.update();
             for(Asteroid asteroid : ShipGame.asterioids){
                 asteroid.update();
@@ -98,7 +106,7 @@ public class Main extends Application {
                 case RIGHT:
                     ShipGame.right = true;
                     break;
-                case SPACE:
+                case UP:
                     ShipGame.accel = true;
                     break;
 
@@ -113,7 +121,7 @@ public class Main extends Application {
                 case RIGHT:
                     ShipGame.right = false;
                     break;
-                case SPACE:
+                case UP:
                     ShipGame.accel = false;
             }
         });

@@ -67,7 +67,7 @@ public class Fuel {
         public void captureCan(){
                 canister.setY(1000);
                 Main.pane.getChildren().remove(canister);
-                ShipGame.fuel += 50;
+                ShipGame.fuel += 25;
                 Main.fuelCounter.textProperty().setValue(Double.toString(ShipGame.fuel));
         }
 

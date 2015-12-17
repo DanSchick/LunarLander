@@ -2,9 +2,13 @@ package sample;
 import javafx.geometry.Point2D;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.*;
+import javafx.scene.paint.Paint;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.Reader;
 import java.util.ArrayList;
 
 /**
@@ -14,7 +18,7 @@ public class ShipGame {
     static ImageView ship;
     ImageView fire;
     boolean show = true;
-    public boolean lost = false;
+    public static boolean lost = false;
     public static double fuel = 100;
     public static ArrayList<Fuel> canisters = new ArrayList<Fuel>();
     private double stepCounter = 0;
@@ -27,6 +31,9 @@ public class ShipGame {
     Point2D vector = new Point2D(0, .4);
     private double dy = 0;
     private double dx = 0;
+    private long delayTime;
+    // this is absolutely gross and a horrible fix i'm cringing writing this code
+    private boolean finished = false;
 
     public ShipGame(Main App, Terrain terrain){
         ship = new ImageView(new Image("images/rocket.png", 50, 75, false, false));
@@ -84,20 +91,27 @@ public class ShipGame {
             if (Math.random() < .005){
                 canisters.add(new Fuel(app, terrainApp));
             }
-            for (Asteroid asteroid : asterioids) {
-                if (ship.getBoundsInParent().intersects(asteroid.asteroid.getBoundsInParent())) {
-                    ship.imageProperty().setValue(new Image("images/rocket_crashed.png", 50, 75, false, false));
-                    lost = true;
-                }
-            }
+
             Fuel removeCan = null;
             for (Fuel can : canisters) {
                 if (ship.getBoundsInParent().intersects(can.getBounds())) {
                     can.captureCan();
                     removeCan = can;
+                    Main.fuelCounter.setFill(Paint.valueOf("C32335"));
+                    Main.fuelCounter.setStroke(Paint.valueOf("C32335"));
+                    delayTime = System.nanoTime();
                 }
             }
+            if(delayTime != 0 && (System.nanoTime() - delayTime)/1000000000.0 > 1.0){
+                Main.fuelCounter.setFill(Paint.valueOf("5B96A3"));
+                Main.fuelCounter.setStroke(Paint.valueOf("5B96A3"));
+                delayTime = 0;
+            }
             canisters.remove(removeCan);
+            if(fuel <= 0){
+                lost = true;
+                finished = true;
+            }
             if (left) {
                 left();
             }
@@ -111,6 +125,25 @@ public class ShipGame {
             if (!accel) {
                 removeFire();
             }
+            for (Asteroid asteroid : asterioids) {
+                if (ship.getBoundsInParent().intersects(asteroid.asteroid.getBoundsInParent())) {
+                    ship.imageProperty().setValue(new Image("images/rocket_crashed.png", 50, 75, false, false));
+                    lost = true;
+                    finished = true;
+                }
+            }
+        } else if(finished){ // if game is lost
+            finished = false;
+            Text gameOver = new Text(Main.pane.getWidth()/2 - 100, Main.pane.getHeight()/2, "Game over!");
+            gameOver.fontProperty().setValue(new Font("arial", 48));
+            Text textScore = new Text(Main.pane.getWidth()/2-100, Main.pane.getHeight()/2 +100, "Your score was : " + Double.toString((double)(System.nanoTime() - Main.startTime) / 1000000000.0));
+            textScore.fontProperty().setValue(gameOver.getFont());
+            textScore.setFill(Paint.valueOf("7B8CC3"));
+            gameOver.setFill(Paint.valueOf("7B8CC3"));
+            Main.pane.getChildren().add(gameOver);
+            Main.pane.getChildren().add(textScore);
+
+
         }
 
     }
@@ -121,5 +154,6 @@ public class ShipGame {
         Main.pane.getChildren().remove(fire);
 
     }
+
 
 }
