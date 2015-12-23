@@ -59,6 +59,8 @@ public class ShipGame {
     void accel(){
         fuel -= .5;
         Main.fuelCounter.textProperty().setValue(Double.toString(fuel));
+        Main.fuelCounter.setFill(Paint.valueOf("C32335"));
+        Main.fuelCounter.setStroke(Paint.valueOf("C32335"));
         dy -= vector.getY();
         dx -= vector.getX();
     }
@@ -82,6 +84,10 @@ public class ShipGame {
     void update(){
         ship.yProperty().setValue(ship.getY() + dy);
         ship.xProperty().setValue(ship.getX() + dx);
+        if(delayTime != 0) {
+            Main.fuelCounter.setFill(Paint.valueOf("5B96A3"));
+            Main.fuelCounter.setStroke(Paint.valueOf("5B96A3"));
+        }
         if(!lost) {
             stepCounter += 1;
             if (Math.random() < .02) {
@@ -97,12 +103,12 @@ public class ShipGame {
                 if (ship.getBoundsInParent().intersects(can.getBounds())) {
                     can.captureCan();
                     removeCan = can;
-                    Main.fuelCounter.setFill(Paint.valueOf("C32335"));
-                    Main.fuelCounter.setStroke(Paint.valueOf("C32335"));
+                    Main.fuelCounter.setFill(Paint.valueOf("3AC337"));
+                    Main.fuelCounter.setStroke(Paint.valueOf("3AC337"));
                     delayTime = System.nanoTime();
                 }
             }
-            if(delayTime != 0 && (System.nanoTime() - delayTime)/1000000000.0 > 1.0){
+            if(delayTime != 0 && (System.nanoTime() - delayTime)/1000000000.0 > 1.5){
                 Main.fuelCounter.setFill(Paint.valueOf("5B96A3"));
                 Main.fuelCounter.setStroke(Paint.valueOf("5B96A3"));
                 delayTime = 0;
